@@ -9,17 +9,19 @@ import ListBoard
 
 playGame :: IO ()
 playGame = do
-  winner <- playUntilDone P1 (emptyBoard :: ListBoard)
-  putStrLn $ "Game over! Winner: " ++ show winner
+  gameOver <- playUntilDone P1 (emptyBoard :: ListBoard)
+  case gameOver of
+    Winner winner -> putStrLn $ "Game over! Winner: " ++ show winner
+    DrawnGame     -> putStrLn "It's a draw!"
 
-playUntilDone :: Board b => Player -> b -> IO Player
+playUntilDone :: Board b => Player -> b -> IO GameOver
 playUntilDone player board = do
-  (board', maybeWinner) <- oneMove player board
-  case maybeWinner of
-    Just winner -> print board' >> return winner
+  (board', maybeGameOver) <- oneMove player board
+  case maybeGameOver of
+    Just gameOver -> print board' >> return gameOver
     Nothing -> playUntilDone (nextPlayer player) board'
 
-oneMove :: Board b => Player -> b -> IO (b, Maybe Player)
+oneMove :: Board b => Player -> b -> IO (b, Maybe GameOver)
 oneMove player board = do
   print board
   putStrLn $ "Enter move for " ++ show player ++ ", format 'x y':"

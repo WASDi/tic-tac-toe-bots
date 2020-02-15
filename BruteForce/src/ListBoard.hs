@@ -39,13 +39,20 @@ makeMove' p (y,x) (ListBoard [r1,r2,r3]) =
                            , if x == 1 then PlayerCell p else c2
                            , if x == 2 then PlayerCell p else c3 ]
 
-getWinner' :: ListBoard -> Maybe Player
-getWinner' (ListBoard rows) = firstJust [checkRows, checkCols, checkDiag]
+getWinner' :: ListBoard -> Maybe GameOver
+getWinner' (ListBoard rows) = firstJust [ Winner <$> checkRows
+                                        , Winner <$> checkCols
+                                        , Winner <$> checkDiag 
+                                        , checkDrawn ]
   where
     checkRows = firstJust $ map checkRow rows
     checkCols = firstJust $ map (\x -> checkRow $ map (!!x) rows) [0,1,2]
     checkDiag = firstJust [ checkRow [rows !! 0 !! 0, rows !! 1 !! 1, rows !! 2 !! 2]
                           , checkRow [rows !! 2 !! 0, rows !! 1 !! 1, rows !! 0 !! 2] ]
+    
+    checkDrawn = if Empty `elem` concat rows
+                   then Nothing
+                   else Just DrawnGame
     
     checkRow :: [Cell] -> Maybe Player
     checkRow = threeSame . playersFromCell
