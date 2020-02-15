@@ -3,12 +3,13 @@ module Board where
 type Position = (Int, Int)
 
 data Player = P1 | P2
-  deriving Eq
+  deriving (Eq, Ord)
 
 data Cell = Empty | PlayerCell Player
   deriving Eq
 
 data GameOver = Winner Player | DrawnGame
+  deriving Show
 
 class Show a => Board a where
   getFreeCells :: a -> [Position]

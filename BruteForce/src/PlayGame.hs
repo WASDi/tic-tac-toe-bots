@@ -1,9 +1,8 @@
-module Lib
-    ( playGame
-    ) where
+module PlayGame where
 
 import Data.Char (isDigit, digitToInt)
 
+import Bot
 import Board
 import ListBoard
 
