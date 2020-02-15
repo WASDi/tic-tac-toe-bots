@@ -1,0 +1,33 @@
+name:                tic-tac-toe-bruteforce
+version:             0.1.0.0
+github:              "WASDi/tic-tac-toe-bots"
+license:             BSD3
+author:              "WASD"
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+
+executables:
+  tic-tac-toe-bruteforce-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - tic-tac-toe-bruteforce
+
+tests:
+  tic-tac-toe-bruteforce-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - tic-tac-toe-bruteforce
