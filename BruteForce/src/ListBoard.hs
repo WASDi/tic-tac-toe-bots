@@ -86,9 +86,9 @@ instance Show ListBoard where
 
 prettyPrint :: ListBoard -> String
 prettyPrint (ListBoard rows@[r1,r2,r3]) =
-  "xy 0 1 2" ++ 
+  "  rc 0 1 2" ++ 
   concat (zipWith 
-           (\r i -> "\n" ++ show i ++ "  " ++ unwords (map show r))
+           (\r i -> "\n  " ++ show i ++ "  " ++ unwords (map show r))
            rows [0..]
          )
 

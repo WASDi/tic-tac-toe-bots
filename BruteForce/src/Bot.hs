@@ -4,26 +4,23 @@ import Data.List (sortBy)
 
 import Board
 
-selectMove :: Board b => Player -> b -> Position
-selectMove player board =
-  let legalMoves = getFreeCells board
-      moveScores = map (\p -> (p, score player $ makeMove player p board)) legalMoves
-      bestMoves  = sortBy (winSorter player) moveScores
-  in  fst $ head bestMoves
+selectMove :: Board b => Player -> b -> (Position, GameOver)
+selectMove player board = head $ scores player board
 
-data Score = Win | Draw | Lose
-  deriving (Show, Ord, Eq)
+scores :: Board b => Player -> b -> [(Position, GameOver)]
+scores player board =
+  let legalMoves  = getFreeCells board
+      scoreMove p = score player (makeMove player p board)
+      results     = map (\pos -> (pos, scoreMove pos)) legalMoves
+  in  sortBy (winSorter player) results
 
 score :: Board b => Player -> b -> GameOver
-score player board =
-  let legalMoves  = getFreeCells board
-      enemy       = nextPlayer player
-      scoreMove p = score enemy $ makeMove player p board
-      results     = map (\p -> (p, scoreMove p)) legalMoves
-      bestMoves   = sortBy (winSorter player) results
+score lastPlayer board =
+  let nextPlayer' = nextPlayer lastPlayer
+      bestMove    = snd $ head $ scores nextPlayer' board
   in  case getWinner board of
         Just gameOver -> gameOver
-        Nothing -> snd $ head bestMoves
+        Nothing -> bestMove
 
 winSorter :: Player -> (Position, GameOver) -> (Position, GameOver) -> Ordering
 winSorter p (_,a) (_,b) = winSorter' a b

@@ -28,7 +28,7 @@ playUntilDone player board = do
 oneMove :: Board b => Player -> b -> IO (b, Maybe GameOver)
 oneMove player board = do
   print board
-  putStrLn $ "Enter move for " ++ show player ++ ", format 'x y':"
+  putStrLn $ "Enter move for " ++ show player ++ ", format 'r c':"
   input <- getLine
   case parsePos input of
     Nothing -> putStrLn "Illegal input!" >> oneMove player board
@@ -39,12 +39,12 @@ oneMove player board = do
                        
                   else putStrLn "Illegal move!" >> oneMove player board
 
--- FIXME: player (1,1), bot (0,0), player (1,2), bot (0,1), player (1,0), player win!
 botMove :: Board b => Player -> b -> IO (b, Maybe GameOver)
 botMove player board = do
-  let pos = selectMove player board
+  let (pos, end) = selectMove player board
   let board' = makeMove player pos board
   putStrLn $ "Bot places " ++ show player ++ " on... " ++ show pos
+             ++ ". Expected end result: " ++ show end
   return (board', getWinner board')
 
 parsePos :: String -> Maybe Position
